@@ -45,6 +45,7 @@ PROJECT_APPS = [
     'main',
     'rents',
     'board',
+    'analysis'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
@@ -85,7 +86,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'commercial',
         'USER': 'root',
         'PASSWORD': 'kb0401',
@@ -116,6 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
+import sqlite3
+con = sqlite3.connect('./test.db')
 
 LANGUAGE_CODE = 'ko-kr'
 

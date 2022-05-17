@@ -25,6 +25,8 @@ url_include = [
     path('', include('main.urls')),
     path("rents/", include('rents.urls')),
     path("board/", include('board.urls')),
+    path("analysis/", include('analysis.urls')),
+
 ]
 
 

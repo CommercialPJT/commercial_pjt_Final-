@@ -31,7 +31,7 @@
           <a class="nav-link" href="{% url 'board:' %}">자유게시판</a>
         </li>
       </ul>
-      {% if request.user.is_authenticated %}
+      {% if requests.user.is_authenticated %}
       <ul class="nav">
         <li class="nav-item">
           <a class="nav-link" href="{% url 'users:logout' %}">로그아웃</a>

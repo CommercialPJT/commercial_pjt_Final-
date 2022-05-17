@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    ul li {
+        margin-left: -20px;
+    }
+    .btn-primary {
+        color : #ffffff;
+        background-color: violet!important;
+        margin-left: -5px;
+    }
+</style>
+
+
+    <!-- 지도를 표시할 div 입니다 -->
+    <div id="map" style="width:100%; height: 850px;"></div>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f41b1ff2ad82b80875f4529dbb8dedf1&libraries=services,clusterer,drawing"></script>
+    <script>
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = { 
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };
+
+    // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+    var map = new kakao.maps.Map(mapContainer, mapOption); 
+    </script>
+
+    <input type="checkbox" id="check" checked>
+    <label for="check">
+        <i class="fas fa-bars" id='btn'></i>
+        <i class='fas fa-times' id='cancel'></i>
+    </label>
+
+    <div class="sidebar">
+        <header class="mb-4">상권분석 서비스</header>
+        <ul>
+            <li class="analysis">
+                <h4 class="mb-4" style="color: white; text-align: center;">예측을 위한 정보를 입력해 주세요</h4>
+                <form action="" autocomplete="off" method="POST" class="gu-form">
+                    {% csrf_token %}
+                <label for="gu" style="color: white; font-size: 20px;">구 : </label>
+                    <select name="gu" class="mb-3" style="width: 80px; height: 30px; font-size: 20px;">
+                        <option>구</option>
+                        <option value="강남구">강남구</option>
+                        <option value="강동구">강동구</option>
+                        <option value="강북구">강북구</option>
+                        <option value="강서구">강서구</option>
+                        <option value="관악구">관악구</option>
+                        <option value="광진구">광진구</option>
+                        <option value="구로구">구로구</option>
+                        <option value="금천구">금천구</option>
+                        <option value="노원구">노원구</option>
+                        <option value="도봉구">도봉구</option>
+                        <option value="동대문구">동대문구</option>
+                        <option value="동작구">동작구</option>
+                        <option value="마포구">마포구</option>
+                        <option value="서대문구">서대문구</option>
+                        <option value="서초구">서초구</option>
+                        <option value="성동구">성동구</option>
+                        <option value="성북구">성북구</option>
+                        <option value="송파구">송파구</option>
+                        <option value="양천구">양천구</option>
+                        <option value="영등포구">영등포구</option>
+                        <option value="용산구">용산구</option>
+                        <option value="종로구">종로구</option>
+                        <option value="중구">중구</option>
+                        <option value="중랑구">중랑구</option>
+                    </select>
+                
+
+                <br>
+                <label for="budget" style="color: white; font-size: 22px; margin-left: 30%;">예산(만원)</label>
+                <input type="number" class="mb-3" name="budget" style="font-size: 22px;">
+                <br>
+                <label for="category1" class="mb-3" style="color: white; font-size: 20px;">업종 : </label>
+                <select name="category1" onchange="category2Change(this)" style="width: 120px; height: 30px; font-size: 20px;">
+                    <option>업종 선택</option>
+                    <option value="외식업">외식업</option>
+                    <option value="서비스업">서비스업</option>
+                    <option value="판매업">판매업</option>
+                </select>
+                <br>    
+                <label for="category2" class="mb-3" style="color: white; font-size: 20px;">세부 업종 : </label>
+                <select id="cate2" onchange="category2Change(this)" name="category2" style="width: 100px; height: 30px; font-size: 20px;">
+                    <option>세부 업종</option>
+                </select>
+                <br>
+                <label for="gender" class="mb-3" style="color: white;"> 주 상대 성별 </label>
+                <input type="radio" name="gender" class="col-2" value="남"><label for="week-weeken" style="color: white;"> 남 </label>
+                <input type="radio" name="gender" class="col-2" value="여"><label for="week-weeken" style="color: white;"> 여 </label>
+                <br>
+                <label for="week-weeken" class="mb-3" style="color: white;"> 주 판매 시간 </label>
+                <input type="radio" name="week-weeken" class="col-2" value="주중"><label for="gender" style="color: white;"> 주중 </label>
+                <input type="radio" name="week-weeken" class="col-2" value="주말"><label for="gender" style="color: white;"> 주말 </label>
+                <br>
+                <label for="age-category" class="mb-1" style="color: white;"> 주 판매 연령대 </label>
+                <br>
+                <input type="radio" name="age-category" class="col-1 mb-1" value="청소년"><label for="age-category" style="color: white;"> 청소년(10대) </label>
+                <input type="radio" name="age-category" class="col-1" value="청년"><label for="age-category" style="color: white;"> 청년(2,30대) </label>
+                <br>
+                <input type="radio" name="age-category" class="col-1 mb-3" value="중년"><label for="age-category" style="color: white;"> 장년(40대) </label>
+                <input type="radio" name="age-category" class="col-1" value="중노년"><label for="age-category" style="color: white;"> 중노년(50대 이상) </label>
+                <br>
+                <a href="{% url 'analysis:result' %}" class="btn btn-primary">예측하기</a>
+            </form>
+
+            </li>
+
+            <li><a href="./bullet-board.html"><i class="fas fa-link"></i><label for="">게시판</label></a></li>
+            <li><a href="./question.html"><i class="fas fa-envelope"></i><label for="">문의</label></a></li>
+            <li><a href="#"><i class="fas fa-stream"></i><label for="">Overview</label></a></li>
+            <li><a href="#"><i class="fas fa-calendar-week"></i><label for="">Events</label></a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i><label for="">About</label></a></li>
+            <li><a href="#"><i class="fas fa-sliders-h"></i><label for="">Services</label></a></li>
+            
+        </ul>
+    </div>
+
+    <script>
+        function category2Change(sub) {
+            var cat2_a = ["한식","중식"]
+            var cat2_b = ["택배","택시","버스"]
+            var cat2_c = ["보험","편의점"]
+            
+            var target = document.getElementById('cate2')
+
+            if (sub.value == '외식업') var d = cat2_a
+            else if (sub.value == '서비스업') var d = cat2_b
+            else if (sub.value == '판매업') var d = cat2_c
+
+            target.options.length = 0
+
+            for (x in d) {
+                var opt = document.createElement("option")
+                opt.value = d[x]
+                opt.innerHTML = d[x]
+                target.appendChild(opt)
+            }
+        }
+
+    </script>
+
+    <script>
+        function giveData() {
+            // gu = document.getElementsByName("gu")
+            // budget = document.getElementsByClassName("budget")
+            // category2 = document.getElementsByClassName("category2")
+            // gender = document.getElementsByClassName("gender")
+            // time = document.getElementsByClassName("week-weeken")
+            // age = document.getElementsByClassName("age-category")
+            // console.log(gu,budget,category2,gender,time,age)
+            gu = document.getElementsByClassName("gu")
+            console.log(gu.value)
+        }
+
+
+
+    </script>
+
+{% endblock %}

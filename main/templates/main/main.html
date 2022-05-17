@@ -1,8 +1,38 @@
 {% extends 'base.html' %}
 
-{% block style %}
-
-{% endblock %}    
 {% block content %}
-<h1>메인확인용</h1>
+
+    <!-- 지도를 표시할 div 입니다 -->
+    <div id="map" style="width:100%; height: 850px;"></div>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d8c2ddbbff1beee4d80ec9a259a56976&libraries=services,clusterer,drawing"></script>
+    <script>
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = { 
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };
+
+    // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+    var map = new kakao.maps.Map(mapContainer, mapOption); 
+    </script>
+
+    <input type="checkbox" id="check">
+    <label for="check">
+        <i class="fas fa-bars" id='btn'></i>
+        <i class='fas fa-times' id='cancel'></i>
+    </label>
+
+    <div class="sidebar">
+        <header>상권분석</header>
+        <ul>
+            <li><a href="./analysis"><i class="fas fa-qrcode"></i><label for="">상권분석</label></a></li>
+            <li><a href="./bullet-board.html"><i class="fas fa-link"></i><label for="">게시판</label></a></li>
+            <li><a href="./question.html"><i class="fas fa-envelope"></i><label for="">문의</label></a></li>
+            <li><a href="#"><i class="fas fa-stream"></i><label for="">Overview</label></a></li>
+            <li><a href="#"><i class="fas fa-calendar-week"></i><label for="">Events</label></a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i><label for="">About</label></a></li>
+            <li><a href="#"><i class="fas fa-sliders-h"></i><label for="">Services</label></a></li>
+        </ul>
+    </div>
+
 {% endblock %}
