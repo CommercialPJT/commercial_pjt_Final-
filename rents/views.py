@@ -4,9 +4,16 @@ from django.views.decorators.http import require_http_methods
 from .models import Rent
 from .forms import RentForm
 
+from django.core.paginator import Paginator
+
 # Create your views here.
 def rent_list(request):
-    rents = Rent.objects.order_by('-pk')
+    rents_list = Rent.objects.order_by('-pk')
+
+    page = request.GET.get('page',1)
+    paginator = Paginator(rents_list, 6)
+    rents = paginator.get_page(page)
+
     context = {
         'rents': rents,
     }
@@ -45,6 +52,7 @@ def rent_edit(request, rent_id):
     rent = get_object_or_404(Rent, pk=rent_id)
     if request.user == rent.user:
         if request.method=="POST":
+            print(request.POST)
             form = RentForm(request.POST, instance=rent)
             if form.is_valid():
                 form.save()

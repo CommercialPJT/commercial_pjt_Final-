@@ -1,13 +1,113 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a class="btn btn-outline-dark" href="{% url 'board:write' %}">새 글 쓰기</a>
 
+<style>
+    #board-list {
+          margin-left: 10%;
+          margin-right: 10%;
+          margin-top: 2%;
+          border: 5px solid silver;
+          padding: 30px;
+          height: 700px;
+      }
+    
+    #board-scroll {
+        margin-left: 0%;
+        margin-top: -7%;    
+    }
+    header{
+        text-align: center;
+        background-color: yellowgreen;
+    }
+
+</style>
+
+
+
+    <div id="board-list">
+        <header class="mb-4" style="height: 40px;">자유 게시판<a style="float: right;" class="btn btn-outline-dark" href="{% url 'board:write' %}">새 글 쓰기</a></header>
+
+    <label for="" class="col-2 mb-3" style="text-align: center;">작성자</label>
+    <label for="" class="col-4" style="text-align: center;">제목</label>
+    <label for="" class="col-3" style="text-align: center;">작성 시간</label>
+    
     {% for board in boards %}
-        <a href="{% url 'board:content' board.id %}">
-            <p>{{ board.user }}</p>
-            <p>{{ board.title }}</p>
-            <p>{{ board.content }}</p>
-        </a>
-    {% endfor %}
+    <div id="board-item">
+        <label for="" class="col-2" style="text-align: center;">{{ board.user }}</label>
+            <label for="" class="col-4" style="text-align: center;"><a href="{% url 'board:content' board.id %}">
+                {{ board.title }}
+                </a></label>
+                <label for="" class="col-3" style="text-align: center;">{{board.created_at|timesince}}</label>
+                {% if request.user == board.user %}
+                <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" style="float: right;">삭제</a>
+                <a href="{% url 'board:edit' board.id %}" class="btn btn-outline-warning" style="float: right;">수정</a>
+                <div class="content-box">
+                    <div id="deleteModal" class="modal" tabindex="-1" >
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <div class="modal-body">
+                                <p>정말로 글을 삭제하시겠습니까?</p>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소</button>
+                                <form action="{% url 'board:remove' board.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="btn btn-outline-danger">삭제</button>
+                                </form>
+                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+        
+        <hr>
+    </div>
+
+        {% endfor %}
+</div>
+    <!-- 페이징처리 시작 -->
+    <div id="board-scroll">
+        <ul class="pagination justify-content-center" style="margin-top: 2rem;">
+            <!-- 이전페이지 -->
+            {% if boards.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?&page={{ boards.previous_page_number }}">이전</a>
+                <!-- href로 뎁스 설정 -->
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+            </li>
+            {% endif %}
+            <!-- 페이지리스트 -->
+            {% for page_number in boards.paginator.page_range %}
+            {% if page_number == boards.number %}
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="?&page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?&page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            <!-- 다음페이지 -->
+            {% if boards.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?&page={{ boards.next_page_number }}">다음</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    <!-- 페이징처리 끝 -->
+      
+</div>
 {% endblock %}

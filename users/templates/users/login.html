@@ -6,7 +6,7 @@
     #board {
           margin-left: 30%;
           margin-right: 30%;
-          margin-top: 10%;
+          margin-top: 15%;
           border: 10px solid silver;
           padding: 30px;
       }   
@@ -26,10 +26,11 @@
                     <label for="user-password">비밀번호</label>
                 </div>
             </div>  
+            <button type="submit" class="btn btn-secondary mb-2 btn-lg col-12">로그인</button>
+
         </form>
     </div>
-    <a href="./side_menu_template.html"><button type="submit" class="btn btn-secondary mb-2 btn-lg col-12">로그인</button></a>
-    <a href="{% url 'users:kakao-login' %}"><button type="button" class="btn btn-warning mb-3   btn-lg col-12">카카오 로그인</button></a>
-    <a href="./login-register.html"><button type="button" class="btn btn-dark btn-lg col-12">회원가입</button></a>
+    <!-- <a href="{% url 'users:kakao-login' %}"><button type="button" class="btn btn-warning mb-3   btn-lg col-12">카카오 로그인</button></a> -->
+    <a href="{% url 'users:signup' %}"><button type="button" class="btn btn-dark btn-lg col-12">회원가입</button></a>
 </div>
 {% endblock %}

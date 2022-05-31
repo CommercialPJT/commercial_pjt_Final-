@@ -31,24 +31,24 @@
           <a class="nav-link" href="{% url 'board:' %}">자유게시판</a>
         </li>
       </ul>
-      {% if requests.user.is_authenticated %}
-      <ul class="nav">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'users:logout' %}">로그아웃</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="">마이 페이지</a>
-        </li>
-      </ul>
+      {% if request.user.is_authenticated %}
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:logout' %}">로그아웃</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="">마이 페이지</a>
+          </li> -->
+        </ul>
       {% else %}
-      <ul class="nav">
-        <li class="nav-item">
-          <a class="nav-link my-login" href="{% url 'users:login' %}">로그인</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link my-signup" href="{% url 'users:signup' %}">회원가입</a>
-        </li>
-      </ul>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link my-login" href="{% url 'users:login' %}">로그인</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link my-signup" href="{% url 'users:signup' %}">회원가입</a>
+          </li>
+        </ul>
       {% endif %}
     </div>
 </nav>

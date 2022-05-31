@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .sidebar {
+        margin-top: -24px;
+        z-index: 50;
+    }
+    label #btn {
+        position: absolute;
+        margin-top: 0px;
+        z-index: 15;
+    }
+
+    label #cancel {
+        top: 103px; 
+    }
+
+    #map {
+        margin-top: -24px;
+    }
+
+</style>
+
+<div id="main-board">
+    <input type="checkbox" id="check" checked!>
+<label for="check">
+    <i class="fas fa-bars" id='btn'></i>
+    <i class='fas fa-times' id='cancel'></i>
+</label>
+
+<div class="sidebar">
+        <header>상권분석</header>
+        <ul>
+            <li><a href="{% url 'analysis:select' %}"><i class="fas fa-qrcode"></i><label for="">상권분석</label></a></li>
+            <li><a href="#"><i class="fas fa-link"></i><label for="">Board</label></a></li>
+            <li><a href="#"><i class="fas fa-stream"></i><label for="">Overview</label></a></li>
+            <li><a href="#"><i class="fas fa-calendar-week"></i><label for="">Events</label></a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i><label for="">About</label></a></li>
+            <li><a href="#"><i class="fas fa-sliders-h"></i><label for="">Services</label></a></li>
+            <li><a href="./question.html"><i class="fas fa-envelope"></i><label for="">Question</label></a></li>
+        </ul>
+</div>
+</div>
+
+    <!-- 지도를 표시할 div 입니다 -->
+    <div id="map" style="width: 100%;height:860px;"></div>
+
+
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d8c2ddbbff1beee4d80ec9a259a56976&libraries=services,clusterer,drawing"></script>
+	<script>
+        let positions = JSON.parse("{{loc_datas_js | escapejs}}")
+        // var place_datas = JSON.parse(loc_datas)
+        var lat = 37.4981
+        var long = 127.0276
+        try {
+            lat = positions[0]["latitude"]
+            long = positions[0]["longtitude"]
+        } catch (error) {
+            console.log(error)
+        }
+
+		var container = document.getElementById('map');
+		var options = {
+			center: new kakao.maps.LatLng(lat, long),
+			level: 3
+		};
+
+		var map = new kakao.maps.Map(container, options);
+
+
+        var imageSrc = "https://t1.daumcdn.net/thumb/R720x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/guest/image/srHM_TrYVVUcnHuSQXkR5UhR4eU.PNG",
+            imageSize = new kakao.maps.Size(64,64),
+            imageOption = {offset: new kakao.maps.Point(27,69)}
+
+
+        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize,imageOption),
+            markerPosition = new kakao.maps.LatLng(33.450701, 126.570667)
+
+           
+            for (var i = 0; i < positions.length; i ++) {
+                // 마커를 생성합니다
+    
+                let latlng = new kakao.maps.LatLng(positions[i]["latitude"],positions[i]["longtitude"])
+                var marker = new kakao.maps.Marker({
+                    map: map, // 마커를 표시할 지도
+                    position: latlng,   // 마커의 위치
+                    // image:markerImage
+                });
+
+                // 마커에 표시할 인포윈도우를 생성합니다 
+                var infowindow = new kakao.maps.InfoWindow({
+                    content: `${positions[i]["name"]}` // 인포윈도우에 표시할 내용
+        });
+
+        // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+        // 이벤트 리스너로는 클로저를 만들어 등록합니다 
+        // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+        kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+        kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+    }
+
+    // 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+    function makeOverListener(map, marker, infowindow) {
+        return function() {
+            infowindow.open(map, marker);
+        };
+    }
+
+    // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+    function makeOutListener(infowindow) {
+        return function() {
+            infowindow.close();
+        };
+    }    
+
+        
+        marker.setMap(map)
+	</script>
+
+
+
+    
+
+{% endblock %}

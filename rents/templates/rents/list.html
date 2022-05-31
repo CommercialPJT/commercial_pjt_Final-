@@ -2,13 +2,135 @@
 
 
 {% block content %}
-<a class="btn btn-outline-dark" href="{% url 'rents:write' %}">새 글 쓰기</a>
+<!-- <a class="btn btn-outline-dark" href="{% url 'rents:write' %}">새 글 쓰기</a> -->
 
-    {% for rent in rents %}
+    <!-- {% for rent in rents %}
         <a href="{% url 'rents:content' rent.id %}">
             <p>{{ rent.location }}</p>
-            <p>{{ rent.get_tag_display }}</p>
+            <p>{{ rent.get_tag_display }}</p> 
             <p>{{ rent.get_rent_type_display }}</p>
         </a>
-    {% endfor %}
+    {% endfor %} -->
+
+
+
+    <style>
+        #board-list {
+              margin-left: 10%;
+              margin-right: 10%;
+              margin-top: 2%;
+              border: 5px solid silver;
+              padding: 30px;
+              height: 700px;
+          }
+        
+        #board-scroll {
+            margin-left: 0%;
+            margin-top: -7%;    
+        }
+        header{
+            text-align: center;
+            background-color: yellowgreen;
+        }
+    
+    </style>
+    
+    
+    
+        <div id="board-list">
+            <header class="mb-5" style="height: 40px;">상가 매매<a style="float: right;" class="btn btn-outline-dark" href="{% url 'rents:write' %}">새 글 쓰기</a></header>
+    
+        <label for="" class="col-1 mb-4" style="text-align: center;">유형</label>
+        <label for="" class="col-1" style="text-align: center;">아이디</label>
+        <label for="" class="col-2" style="text-align: center;">내용</label>
+        <label for="" class="col-1" style="text-align: center;">유형</label>
+        <label for="" class="col-1" style="text-align: center;">가격</label>
+        <label for="" class="col-2" style="text-align: center;">위치</label>
+        <label for="" class="col-2" style="text-align: center;">시간</label>
+        {% for rent in rents %}
+        <div id="board-item">
+            <label for="" class="col-1" style="text-align: center;">{{rent.get_tag_display}} </label>
+            <label for="" class="col-1" style="text-align: center;">{{ rent.user }}</label>
+                <label for="" class="col-2" style="text-align: center;"><a href="{% url 'rents:content' rent.id %}">
+                    {{rent.content}}
+                    </a></label>
+                    <label for="" class="col-1" style="text-align: center;">{{rent.get_rent_type_display}}</label>
+                    <label for="" class="col-1" style="text-align: center;">{{rent.price}} 만원</label>
+                    <label for="" class="col-2" style="text-align: center;">{{rent.location}} </label>     
+                    <label for="" class="col-2" style="text-align: center;">{{rent.created_at}}</label>
+
+
+                    {% if request.user == rent.user %}
+                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" style="float: right;">삭제</a>
+                    <a href="{% url 'rents:edit' rent.id %}" class="btn btn-outline-warning" style="float: right;">수정</a>
+                    <div class="content-box">
+                        <div id="deleteModal" class="modal" tabindex="-1" >
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <div class="modal-body">
+                                    <p>정말로 글을 삭제하시겠습니까?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소</button>
+                                    <form action="{% url 'rents:remove' rent.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-danger">삭제</button>
+                                    </form>
+                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+            <hr>
+        </div>
+    
+            {% endfor %}
+        </div>
+ <!-- 페이징처리 시작 -->
+ <div id="board-scroll">
+    <ul class="pagination justify-content-center" style="margin-top: 2rem;">
+        <!-- 이전페이지 -->
+        {% if rents.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?&page={{ rents.previous_page_number }}">이전</a>
+            <!-- href로 뎁스 설정 -->
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+        </li>
+        {% endif %}
+        <!-- 페이지리스트 -->
+        {% for page_number in rents.paginator.page_range %}
+        {% if page_number == rents.number %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="?&page={{ page_number }}">{{ page_number }}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?&page={{ page_number }}">{{ page_number }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        <!-- 다음페이지 -->
+        {% if rents.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?&page={{ rents.next_page_number }}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+        </li>
+        {% endif %}
+    </ul>
+
+<!-- 페이징처리 끝 -->
+
+        </div>
+    
+        
+
 {% endblock %}

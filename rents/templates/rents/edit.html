@@ -1,9 +1,121 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <form action="{% url 'rents:edit' rent.id %}" method="POST">
+
+
+<style>
+
+  #board {
+      margin-left: 30%;
+      margin-right: 30%;
+      margin-top: 10%;
+      border: 5px solid silver;
+      padding: 30px;
+  }
+</style>
+
+  <!-- <form action="{% url 'rents:edit' rent.id %}" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
     <button>수정</button>
-  </form>
+  </form> -->
+
+    <div id="board">
+      <form action="{% url 'rents:edit' rent.id %}" method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-default">아이디</span>
+          <input type="text" class="form-control" aria-label="Sizing example input" value="{{rent.user.username}}" aria-describedby="inputGroup-sizing-default" disabled>
+    
+        </div>
+    
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-default">날짜</span>
+          <input type="date" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{ rent.created_at|date:'Y-m-d'}}" disabled>
+        </div>
+    
+        <div class="input-group mb-3">
+          <select class="form-select" name="tag" id="inputGroupSelect02">
+            <option value="0">구매</option>
+            <option value="1">판매</option>
+          </select>
+          <label class="input-group-text" for="inputGroupSelect02">태그</label>
+        </div>
+
+        <div class="input-group mb-3">
+          <select class="form-select" name="rent_type" id="inputGroupSelect02">
+            <option value="0">월세</option>
+            <option value="1">전세</option>
+            <option value="2">매매</option>
+
+          </select>
+          <label class="input-group-text" for="inputGroupSelect02">유형</label>
+        </div>
+    
+        <div class="input-group mb-3">
+          <span class="input-group-text">내용</span>
+          <textarea class="form-control" name="content" aria-label="With textarea" style="height: 100px;">{{rent.content}}</textarea>
+        </div>
+
+        <div class="input-group mb-3">
+          <select class="form-select" name="location" id="inputGroupSelect02">
+            <option value="강남구">강남구</option>
+              <option value="강동구">강동구</option>
+              <option value="강북구">강북구</option>
+              <option value="강서구">강서구</option>
+              <option value="관악구">관악구</option>
+              <option value="광진구">광진구</option>
+              <option value="구로구">구로구</option>
+              <option value="금천구">금천구</option>
+              <option value="노원구">노원구</option>
+              <option value="도봉구">도봉구</option>
+              <option value="동대문구">동대문구</option>
+              <option value="동작구">동작구</option>
+              <option value="마포구">마포구</option>
+              <option value="서대문구">서대문구</option>
+              <option value="서초구">서초구</option>
+              <option value="성동구">성동구</option>
+              <option value="성북구">성북구</option>
+              <option value="송파구">송파구</option>
+              <option value="양천구">양천구</option>
+              <option value="영등포구">영등포구</option>
+              <option value="용산구">용산구</option>
+              <option value="종로구">종로구</option>
+              <option value="중구">중구</option>
+              <option value="중랑구">중랑구</option>
+          </select>
+          <label class="input-group-text" for="inputGroupSelect02">구</label>
+        </div>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text"  id="inputGroup-sizing-default">가격(만원)</span>
+          <input type="number" value="{{rent.price}}" class="form-control" name="price" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+        </div>
+
+        <button class="btn btn-outline-warning col-6" style="margin-left: 50px;">수정</button>
+        <a class="btn btn-outline-danger col-5" data-bs-toggle="modal" data-bs-target="#deleteModal" style="margin-left: 30px;">삭제</a>
+      </form>
+   
+  </div>
+  <div id="deleteModal" class="modal" tabindex="-1" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body">
+            <p>정말로 글을 삭제하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소</button>
+            <form action="{% url 'rents:remove' rent.id %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-outline-danger">삭제</button>
+            </form>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+
+
 {% endblock %}

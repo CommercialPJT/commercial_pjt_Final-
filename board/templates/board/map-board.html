@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<style>
+    
+    #board-list {
+        position: absolute;
+          width: 500px;
+          height: 5 00px;
+          margin-top: 2%;
+          border: 5px solid silver;
+          padding: 30px;
+          margin-left: 60%;
+          margin-top: 10%;
+          background-color: white;
+          opacity: 0.5;
+          z-index: 30;
+      }
+    
+    #board-scroll {
+        margin-left: 0%;
+        margin-top: -7%;    
+    }
+    header{
+        text-align: center;
+        background-color: yellowgreen;
+    }
+
+</style>
+
+
+
+
+<style>
+    #board-list2 {
+        position: absolute;
+          margin-left: 10%;
+          margin-top: 2%;
+          border: 5px solid silver;
+          padding: 30px;
+          height: 700px;
+          width: 600px;
+          z-index: 35;
+      }
+    
+    #board-scroll2 {
+        margin-left: 0%;
+        margin-top: -7%;    
+    }
+
+</style>
+
+
+<div id="board-list">
+    <header class="mb-4" style="height: 40px;">자유 게시판<a style="float: right;" class="btn btn-outline-dark" href="{% url 'board:' %}">자세히 보기</a></header>
+
+<label for="" class="col-2 mb-3" style="text-align: center;">작성자</label>
+<label for="" class="col-4" style="text-align: center;">제목</label>
+<label for="" class="col-3" style="text-align: center;">작성 시간</label>
+
+{% for board in boards %}
+<div id="board-item">
+    <label for="" class="col-2" style="text-align: center;">{{ board.user }}</label>
+        <label for="" class="col-4" style="text-align: center;"><a href="{% url 'board:content' board.id %}">
+            {{ board.title }}
+            </a></label>
+            <label for="" class="col-3" style="text-align: center;">{{board.created_at|timesince}}</label>
+            
+    
+    <hr>
+</div>
+
+    {% endfor %}
+    <!-- 페이징처리 시작 -->
+<div id="board-scroll">
+    <ul class="pagination justify-content-center" style="margin-top: 2rem;">
+        <!-- 이전페이지 -->
+        {% if boards.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?&page={{ boards.previous_page_number }}">이전</a>
+            <!-- href로 뎁스 설정 -->
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+        </li>
+        {% endif %}
+        <!-- 페이지리스트 -->
+        {% for page_number in boards.paginator.page_range %}
+        {% if page_number == boards.number %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="?&page={{ page_number }}">{{ page_number }}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?&page={{ page_number }}">{{ page_number }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        <!-- 다음페이지 -->
+        {% if boards.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?&page={{ boards.next_page_number }}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+<!-- 페이징처리 끝 -->
+  
+</div>
+
+</div>
+
+
+
+ 
+
+    <div class="sidebar">
+        <header>상권분석</header>
+        <ul>
+            <li><a href="./analysis"><i class="fas fa-qrcode"></i><label for="">상권분석</label></a></li>
+            <li><a href="./mapBoard"><i class="fas fa-link"></i><label for="">게시판</label></a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i><label for="">문의</label></a></li>
+            <li><a href="#"><i class="fas fa-stream"></i><label for="">Overview</label></a></li>
+            <li><a href="#"><i class="fas fa-calendar-week"></i><label for="">Events</label></a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i><label for="">About</label></a></li>
+            <li><a href="#"><i class="fas fa-sliders-h"></i><label for="">Services</label></a></li>
+        </ul>
+    </div>
+
+
+    
+
+
+
+
+    </div>
+
+    
+
+       <!-- 지도를 표시할 div 입니다 -->
+       <div id="map" style="width:100%; height: 850px;"></div>
+       <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d8c2ddbbff1beee4d80ec9a259a56976&libraries=services,clusterer,drawing"></script>
+       <script>
+       var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+           mapOption = { 
+               center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+               level: 3 // 지도의 확대 레벨
+           };
+   
+       // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+       var map = new kakao.maps.Map(mapContainer, mapOption); 
+       </script>
+   
+       <input type="checkbox" id="check">
+       <label for="check">
+           <i class="fas fa-bars" id='btn'></i>
+           <i class='fas fa-times' id='cancel'></i>
+       </label>
+    
+    
+      
+
+{% endblock %}

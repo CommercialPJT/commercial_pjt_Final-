@@ -1,10 +1,56 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<style>
+    #board {
+        margin-left: 20%;
+      margin-right: 20%;
+      margin-top: 2%;
+      border: 5px solid silver;
+      padding: 30px;
+      height: 700px;
+    }
+</style>
+
+
+    <!-- <br> -->
+    <!-- <form action="{% url 'board:write' %}" method="POST">
+        {% csrf_token %}
+            {{ form.as_p }}
+        <button class="btn btn-outline-secondary">글쓰기</button>   
+    </form> -->
+
     <br>
     <form action="{% url 'board:write' %}" method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn">글쓰기</button>
+        <div id="board">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">아이디</span>
+                <input type="text" class="form-control" aria-label="Sizing example input" value="{{user.username}}" aria-describedby="inputGroup-sizing-default" disabled>
+          
+              </div>
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">날짜</span>
+                <input id="date-input" type="date" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="" disabled>
+              </div>
+          
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
+                <input type="text" name="title" class="form-control" aria-label="Sizing example input" value="{{board.title}}" aria-describedby="inputGroup-sizing-default">
+              </div>
+          
+              <div class="input-group mb-3">
+                <span class="input-group-text">내용</span>
+                <textarea class="form-control" name="content" aria-label="With textarea" style="height: 430px;">{{board.content}}</textarea>
+              </div>
+    
+              <button class="btn btn-outline-secondary col-8" style="margin-left: 130px;">글쓰기</button>
+
+        </div>
     </form>
+
+    <script>
+        document.getElementById('date-input').value = new Date().toISOString().substring(0, 10);
+    </script>
 {% endblock %}

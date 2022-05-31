@@ -1,3 +1,4 @@
+from re import L
 from django.shortcuts import (
     render, redirect, get_object_or_404
 )
@@ -92,3 +93,8 @@ def kakao_logout(request):
     LOGOUT_REDIRECT_URI = "http://127.0.0.1:8000/users/login/"
     url = f"https://kauth.kakao.com/oauth/logout?client_id={REST_API_KEY}&logout_redirect_uri={LOGOUT_REDIRECT_URI}"
     return redirect(url)
+
+
+@login_required
+def profile(request) :
+    return render(request,'users/profile.html')

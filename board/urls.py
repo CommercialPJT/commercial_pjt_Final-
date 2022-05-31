@@ -9,4 +9,5 @@ urlpatterns = [
     path('content/<int:board_id>/', views.board_content, name='content'),
     path('content/<int:board_id>/remove/', views.board_remove, name='remove'),
     path('content/<int:board_id>/edit/', views.board_edit, name='edit'),
+    path('mapboard/',views.map_board, name='mapboard'),
 ]
